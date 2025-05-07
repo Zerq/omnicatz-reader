@@ -1,0 +1,14 @@
+{
+    "scripts": {
+        "build": "tsc && gulp",
+        "watch": "tsc --watch"
+    },
+    "dependencies": { "get-function-location":"2.0.0"},
+    "devDependencies": {
+        "typescript":"5.7.3",
+        "@types/react":"19.0.8",
+        "gulp":"5.0.0",
+        "gulp-newer":"1.4.0"
+
+    }
+}

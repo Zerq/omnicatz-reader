@@ -1,0 +1,94 @@
+.epubViewer {
+    display: flex
+;
+    nav.tableOfContent {
+        flex: 1;
+        max-width: calc(15% - 1rem);
+        height: calc(100vh - 5rem);
+        overflow-y: scroll;
+        overflow-x: hidden;
+        padding-right: 1rem;
+
+        .c1 {
+            width: 100%;
+ 
+
+            li {
+                .c2 {
+
+
+                    li {
+                        .c3 {
+                            display: flex;
+                            flex-direction: row;
+                            flex-wrap: wrap;
+
+                            li.part {
+
+
+                                margin: 0.1rem;
+
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    div.BookText {
+        pre {
+            white-space: pre-line;
+            margin-bottom: 2rem;
+        }
+
+
+        max-width: calc(90% - 6rem);
+        height: calc(100vh - 5rem);
+        overflow-y: scroll;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+ 
+        padding-inline: 3rem;
+
+        pre[data-selected = "true"]{
+            color:aqua;
+        }
+
+    }
+
+
+
+
+    div {
+        display: flex;
+        height: calc(100vh - 9rem);
+    }
+
+
+    .tableOfContent ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+
+        li {
+
+            color: silver;
+            margin-bottom: 0.5rem;
+
+            li {
+                color: white;
+                margin-bottom: 0.5rem;
+            }
+        }
+
+
+        li[data-selected="true"]{
+            color:aqua;
+        }
+    }
+
+
+}
