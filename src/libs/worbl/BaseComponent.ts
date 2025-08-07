@@ -1,8 +1,15 @@
 import { IOC } from "./IOC.js";
 import { BaseComponentLike, Ctr, IComponentRegistry } from "./types.js";
 
+
+export function GetComponent<T extends BaseComponent<V>, V>(queryString:string){
+   return (document.querySelector(queryString) as any).Component as BaseComponent<T>;
+}
+
+
+
 export abstract class BaseComponent<T> implements BaseComponentLike<T> {
-    protected model: T;
+    public Model: T;
     #container: HTMLElement;
 
     #id: string;
@@ -21,6 +28,7 @@ export abstract class BaseComponent<T> implements BaseComponentLike<T> {
 
     public constructor() {
         this.#container = this.makeContainer();
+        (this.Container as any).Component = this
     }
 
     public IsInitialized:boolean = false;
@@ -69,6 +77,5 @@ export abstract class BaseComponent<T> implements BaseComponentLike<T> {
         if (view !== null) {
             this.#container.appendChild(view);
         }
-
     }
 }

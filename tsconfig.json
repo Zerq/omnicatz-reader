@@ -3,22 +3,27 @@
     "compilerOptions": {
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
-        "module": "ES2022", //here we specify which version and type of javascript module we are using i picked the latest ecmascript module.
-        "target": "ES2024", //here we specify what version of ecmascript i.e javascript we are targeting.. i like the latest and greatest personally
+        "module": "es2022", //here we specify which version and type of javascript module we are using i picked the latest ecmascript module.
+        "target": "ES2022", //here we specify what version of ecmascript i.e javascript we are targeting.. i like the latest and greatest personally
         "jsx": "react", //here we specify that we are using react templates using the react formating
         "jsxFactory": "JSX", //this specifys the factory method used to interpret the code used this override the default one meaning we can write our own the function name would be JSX in this case
         "jsxFragmentFactory": "__frag", //honestly i am unsure what this does.... but the blessed Omnissiah as ordained that it is so... so until i figure out what the heck that does i am just gonna leave it lol
         "sourceMap": true, //we want to be able to debug our code and get the typescript not the generated js which may not be as readable
         "sourceRoot": "/src",
         "outDir": "wwwroot",
-        "allowJs": true,
- 
-        "lib": [
-            "ES2024",
-            "DOM"
-        ], //here we specify what intelicense we want... DOM means we want a page dom model.. if we where doing nodejs that would be unessesary... also specifying the latest ecmascript verison        
+        "allowJs": true, 
+        //here we specify what intelicense we want... DOM means we want a page dom model.. if we where doing nodejs that would be unessesary... also specifying the latest ecmascript verison        
         "skipLibCheck": true
     },
-    "include": ["src"],
-    "exclude": ["wwwroot","node_modules","bin", "obj", "properties", "git"]
+    "include": [
+        "src"
+    ],
+    "exclude": [
+        "wwwroot",
+        "node_modules",
+        "bin",
+        "obj",
+        "properties",
+        "git"
+    ]
 }

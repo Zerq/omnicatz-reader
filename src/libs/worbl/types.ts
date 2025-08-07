@@ -32,7 +32,7 @@ export interface TypeMetadataLike {
 export abstract class IRouter extends PsudoInterface {
     private constructor() { super(); }
     public defaultRouteHandler?: (tag, params: ParamsObj) => void;
-    public abstract HandleRout(hash: string): void;
+    public abstract HandleRoute(hash: string): void;
     public abstract routeMappings: Map<string, Routmappinng>;
 }
 

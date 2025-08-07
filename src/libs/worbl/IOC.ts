@@ -7,6 +7,58 @@ export function RegisterService<A>(abs: AbsCtr<A>, ...params: unknown[]) {
     };
 }
 
+export abstract class IPipe extends PsudoInterface {
+    private constructor() { super(); }
+    abstract Subscribe<T>(name: string, subscriber: (mssage: T) => void): void;
+    abstract Unsubscribe<T>(name: string, subscriber: (mssage: T) => void): void;
+
+    abstract Dispatch<T>(name: string, subscriber: (mssage: T) => void): void;
+}
+
+[RegisterService(IPipe)]
+export class Pipe implements IPipe {
+
+    #map = new Map<string, Array<(mssage: unknown) => void>>();
+
+    Subscribe<T>(name: string, subscriber: (mssage: T) => void): void {
+
+        if (!this.#map.has(name)) {
+            this.#map.set(name, []);
+        }
+
+        const index = this.#map.get(name).indexOf(subscriber);
+
+        if (index === -1) {
+            this.#map.get(name).push(subscriber);
+        }
+        else {
+            this.#map.get(name)[index] = (subscriber);
+        }
+    }
+
+    Unsubscribe<T>(name: string, subscriber: (mssage: T) => void): void {
+
+        if (!this.#map.has(name)) {
+            this.#map.set(name, []);
+        }
+
+        const index = this.#map.get(name).indexOf(subscriber);
+
+        if (index !== -1) {
+            this.#map.get(name).splice(index, 1);
+        }
+    }
+
+    Dispatch<T>(name: string, message: T): void {
+        if (!this.#map.has(name)) {
+            this.#map.set(name, []);
+        }
+
+        this.#map.get(name).forEach(sub => {
+            sub(message);
+        })
+    }
+}
 
 export class IOC {
     private static instance: IOC;
@@ -30,7 +82,7 @@ export class IOC {
     public New<T>(abs: AbsCtr<T>, ...params: unknown[]): T {
         const ctr = this.ctrs.get(abs.name);
 
-        if (ctr === undefined){
+        if (ctr === undefined) {
             throw new Error(abs.name + "had no matching constructor");
         }
 

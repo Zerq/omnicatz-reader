@@ -2,26 +2,51 @@
     margin: 0;
     padding: 0;
     border: 0;
-    background-color: black;
-    color: white;
-    --fore: rgb(87, 49, 0);
-    --back: gold;
-    --backDarkestGold: rgb(80, 68, 0);
-    --border: 0.05rem;
+    background-color: white;
+    color: black;
+    
+    --fore: rgb(0, 0, 0);
+    --header: rgb(221, 221, 221);
+
+    --header-high: white;
+    --header-low:rgb(164, 164, 164);
+
+
+
+
+    --back: white;
+    --border: 0.1rem;
     --borderR: 0.5rem;
     --gradient: linear-gradient(49deg, rgba(136, 63, 7, 1) 0%, rgba(98, 46, 0, 1) 11%, rgba(0, 0, 0, 1) 17%, rgba(147, 69, 0, 1) 20%, rgba(31, 12, 0, 1) 36%, rgba(156, 68, 21, 1) 39%, rgba(3, 1, 0, 1) 67%, rgba(64, 25, 0, 1) 70%, rgba(41, 17, 2, 1) 100%);
 }
 
+li{
+    list-style: none;
+}
+
+body {
+    margin:0;
+    padding: 0;
+    border: 0;
+}
 
  
 
-    .navMenu {
+    .appMenu {
         header {
              width: 100%;
 
             ul {
                 margin-block-start: 1rem;
                 margin-block-end: 1rem;
+            }
+
+            a {
+                padding: 0.5rem;
+                text-shadow: none;
+                text-decoration: none;
+                font-weight: bold;
+                color: black;
             }
         }
     }
@@ -31,12 +56,15 @@
 
 
     header {
-        background-color: var(--back);
+        background-color: var(--header);
         border: solid var(--border) var(--fore);
-        border-bottom-left-radius: 0 !important;
-        border-bottom-right-radius: 0 !important;
-        ;
+        border-color: var(--header-high) var( --header-low)     var( --header-low) var(--header-high);
+ 
+        background: linear-gradient(0deg, rgba(42, 123, 155, 1) 0%, rgba(240, 240, 240, 1) 0%, rgba(235, 235, 235, 1) 39%, rgba(224, 224, 224, 1) 51%, rgba(255, 255, 255, 1) 53%, rgba(237, 237, 237, 1) 91%, rgba(219, 219, 219, 1) 100%);
+        
+
         color: var(--fore);
+        box-sizing: border-box;
 
         h1 {
             margin-inline: 1rem;
@@ -46,7 +74,7 @@
             font-size: larger;
         }
 
-        border-radius: var(--borderR);
+
 
         nav {
             user-select: none;
@@ -63,12 +91,8 @@
     }
 
     main {
-        background-color: var(--backDarkestGold);
-        border: solid var(--border) var(--fore);
-        color: white;
-        border-radius: var(--borderR);
-        border-top-left-radius: 0 !important;
-        border-top-right-radius: 0 !important;
+        background-color: var(--back);
+        color: var(--fore);
         height: calc(100vh - 5rem);
         width: 100%;
     }

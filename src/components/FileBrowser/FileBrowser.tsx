@@ -3,10 +3,6 @@ import { Component } from "../../libs/worbl/Component.js";
 import { JSX, __frag } from "../../libs/worbl/JSX.js";
 import { CSS } from "../../libs/worbl/CSS.js";
 
-
-
-
-
 export interface SimpleFile {
     name: string;
     fullName: string;
@@ -21,7 +17,7 @@ export interface SimpleDirectory {
     directories: Array<SimpleDirectory>;
 }
 
-@CSS(import.meta.resolve("./FileBrower.css"))
+@CSS("./FileBrower.css",import.meta)
 @Component("file-browser")
 export class FileBrowser extends BaseComponent<SimpleDirectory> {
     Name: string;
@@ -35,7 +31,7 @@ export class FileBrowser extends BaseComponent<SimpleDirectory> {
 
     private async getDirectory(path) {
         let request = !path ? await fetch(`${location.origin}/filebrowse_home`) : await fetch(`${location.origin}/filebrowse/${encodeURIComponent(path)}`)
-        this.model = await request.json();
+        this.Model = await request.json();
     }
 
     protected makeContainer(): HTMLElement {
@@ -69,25 +65,25 @@ export class FileBrowser extends BaseComponent<SimpleDirectory> {
 
 
     protected View(): HTMLElement {
-        if (!this.model) {
+        if (!this.Model) {
             return <div>loading...</div>
         }
 
         let parent = <></>;
 
 
-        if (this.model.parent) {
-            parent = <li class="drive" ondblClick={e => this.openDir(e, this.model.parent)}>[..]</li>;
+        if (this.Model.parent) {
+            parent = <li class="drive" ondblClick={e => this.openDir(e, this.Model.parent)}>[..]</li>;
         }
         return <>
             <div class="dir">
-                <div>{this.model.fullName}</div>
+                <div>{this.Model.fullName}</div>
             </div>
             <ul>
                 {parent}
 
-                {... this.model.directories.map(n => <li class="dir" ondblClick={e => this.openDir(e, n.fullName)}>[{n.name}]</li>)}
-                {... this.model.files.map(n => <li class="file" ondblClick={e => this.open(e, n.fullName)}>{n.name} {n.extension}</li>)}
+                {... this.Model.directories.map(n => <li class="dir" ondblClick={e => this.openDir(e, n.fullName)}>[{n.name}]</li>)}
+                {... this.Model.files.map(n => <li class="file" ondblClick={e => this.open(e, n.fullName)}>{n.name} {n.extension}</li>)}
 
 
 

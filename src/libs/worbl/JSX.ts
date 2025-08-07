@@ -1,5 +1,4 @@
 import { ReactNode } from "react";
-import { ContexTagtName } from "./Components/Context/WerblContext.js";
 import { IOC } from "./IOC.js";
 import { IComponentRegistry, IMetaDataService } from "./types.js";
 class jsxContext {
@@ -31,6 +30,9 @@ export function JSX(tag: string, attributes: { [name: string]: any; }, ...childr
         const docFrag = document.createDocumentFragment();
         children.forEach(child => {
 
+            if (!child){
+                return;
+            }
 
             const type = metaData.Get(child);
 
@@ -131,6 +133,7 @@ export function JSX(tag: string, attributes: { [name: string]: any; }, ...childr
             return;
         }
 
+        
 
         newElement.appendChild((elm as HTMLElement));
 

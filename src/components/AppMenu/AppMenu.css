@@ -1,10 +1,11 @@
-.navMenu {
-
+.appMenu {
     header {
         height: fit-content;
-       
-        margin-block: auto;
         display: flex;
+        margin-block: auto;
+        li {
+            list-style: none;
+        }
 
         img {
             width: 2.5rem;
@@ -28,9 +29,9 @@
             ul {
                 display: flex;
                 width: auto;
-
+                 
                 li {
-                    list-style: none;
+                
                     padding: 0;
                     margin: 0;
                     flex: auto;
@@ -49,8 +50,5 @@
                 }
             }
         }
-
-        display: flex;
-
     }
 }

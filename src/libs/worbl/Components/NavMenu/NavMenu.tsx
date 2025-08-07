@@ -3,20 +3,13 @@ import { CSS } from "../../CSS.js";
 import { JSX } from "../../JSX.js"
 import { BaseComponent } from "../../BaseComponent.js";
 
-export interface UrlLinkLike {
+export interface LinkLike {
     Name: string;
     Url: string;
 }
 
-
-export interface ActionLinkLike {
-    Name: string;
-    action: ()=> void;
-}
-
-
 export interface MenuDataLike {
-    Items: Array<UrlLinkLike>;
+    Items: Array<LinkLike>;
     Title: string;
     Logo?: string;
 }
@@ -28,7 +21,7 @@ export class NavMenu extends BaseComponent<MenuDataLike> {
 
     public constructor() {
         super();
-        this.model = { Title: "", Items: [] };
+        this.Model = { Title: "", Items: [] };
         this.Render();
     }
     protected makeContainer(): HTMLElement {
@@ -37,13 +30,10 @@ export class NavMenu extends BaseComponent<MenuDataLike> {
 
     public SetParam(name: string, value: any) {
         if (name.toLowerCase() === "title") {
-            this.model.Title = value;
+            this.Model.Title = value;
         }
         if (name.toLowerCase() === "items") {
-            this.model.Items = value;
-        }
-        if (name.toLowerCase() === "logo") {
-            this.model.Logo = value;
+            this.Model.Items = value;
         }
 
         this.Render();
@@ -51,11 +41,12 @@ export class NavMenu extends BaseComponent<MenuDataLike> {
 
     protected View(): HTMLElement {
         return <header> 
-            <img src={this.model.Logo} alt="" />
-            <h1>{this.model.Title}</h1>
+            <span class="branding">
+            <h1>{this.Model.Title}</h1>
+            </span>
             <nav>
                 <ul>
-                    {...this.model.Items.map(n => <li><a href={n.Url}>{n.Name}</a></li>)}
+                    {...this.Model.Items.map(n => <li><a href={n.Url}>{n.Name}</a></li>)}
             </ul>
         </nav>
         </header >;

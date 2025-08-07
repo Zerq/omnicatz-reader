@@ -4,6 +4,8 @@ import { JSX, __frag } from "../../libs/worbl/JSX.js";
 import { CSS } from "../../libs/worbl/CSS.js";
 import { Epub } from "../../epub.js";
 import { ReactNode } from "react";
+import { ProcessedEbook } from "./ProcessedEbook.js";
+import { IEpubReader } from "../../MenuContainerLike.js";
 
 
 function setSpeech() {
@@ -22,36 +24,63 @@ function setSpeech() {
     )
 }
 
-type ProcessedEbook = { title: string, authorx: string, description: string, content: Array<Array<{ title: string, content: Array<string> }>> };
 
-@CSS(import.meta.resolve("./EpubReader.css"))
+@CSS("./EpubReader.css", import.meta)
 @Component("epub-reader")
-export class EpubReader extends BaseComponent<ProcessedEbook> {
+export class EpubReader extends BaseComponent<ProcessedEbook> implements IEpubReader {
     private Name: string;
     private content: Array<string> = [];
+    public Pos: number = 0;
+    public MaxPos: number = 0;
+
+    public Play(pos: number) {
+        const li = document.querySelector(`li[data-nr="${pos}"]`) as HTMLLIElement;
+
+        const indexes = li.getAttribute("data-index").split(",").map(n => Number.parseInt(n));
+
+
+        if (speechSynthesis.paused) {
+            speechSynthesis.resume();
+        }
+        else {
+            this.click(indexes[0], indexes[1], indexes[2]);
+        }
+    }
+
+    public Pause() {
+        speechSynthesis.pause();
+    }
+
+    #uteranceDone() {
+        if (this.Pos === this.MaxPos) {
+            this.Pos = 0;
+            return;
+        }
+
+        this.Pos++;
+        this.Play(this.Pos);
+    }
+
 
     public constructor() {
         super();
         this.getDirectory("/home/arch/Downloads/the-trials-and-tribulations-of-my-next-life-as-a-noblewoman-volume-1.epub").then((model) => {
-            this.model = model;
+            this.Model = model;
             this.Render();
         });
 
         let s = setSpeech();
-        s.then((voices:Array<SpeechSynthesisVoice>) =>  this.voice = voices.find(n=> n.lang === "en-US")); 
+        s.then((voices: Array<SpeechSynthesisVoice>) => this.voice = voices.find(n => n.lang === "en-US"));
+
     }
 
     private voice: SpeechSynthesisVoice;
-
     private async getDirectory(path): Promise<ProcessedEbook> {
-
-
         const request = await fetch(`${location.origin}/read-content?path=${path}`)
-        const model = await request.json() as Epub;
-
+        const Model = await request.json() as Epub;
         const groupGroupArray = [];
 
-        model.navigation.map(n => {
+        Model.navigation.map(n => {
             const groupArray = [];
             n.nestedItems.map((data: any) => {
                 const parser = new DOMParser();
@@ -89,7 +118,7 @@ export class EpubReader extends BaseComponent<ProcessedEbook> {
             groupGroupArray.push(groupArray);
         });
 
-        return { title: model.title, authorx: model.author, description: model.description, content: groupGroupArray };
+        return { title: Model.title, authorx: Model.author, description: Model.description, content: groupGroupArray };
     }
 
     protected makeContainer(): HTMLElement {
@@ -108,34 +137,24 @@ export class EpubReader extends BaseComponent<ProcessedEbook> {
     };
 
     private partSize = 10;
-
-
     private selection: [number, number, number] | null = null;
+    private uterance: SpeechSynthesisUtterance;
 
     click(i1: number, i2: number, i3: number) {
         this.selection = [i1, i2, i3];
         this.Render();
 
-        requestAnimationFrame(()=> {
-                
-            
-
+        requestAnimationFrame(() => {
             const part = document.querySelector('pre[data-selected="true"]');
-                part.scrollIntoView(true);
+            part.scrollIntoView(true);
+     
+            this.uterance = new SpeechSynthesisUtterance(part.textContent);
+            this.uterance.addEventListener("end", this.#uteranceDone);
+            this.uterance.voice = this.voice;
 
-
-
-                const uterance = new  SpeechSynthesisUtterance(part.textContent);
-                uterance.voice = this.voice;
-
-                
-                
-                speechSynthesis.speak(uterance);
-  
-        
+            speechSynthesis.speak(this.uterance);
         });
     }
-
 
     private lookUp = "ABCDEFGHIJKLMNOPQRSTUVXYZ".split("");
 
@@ -147,7 +166,7 @@ export class EpubReader extends BaseComponent<ProcessedEbook> {
     }
 
     protected View(): HTMLElement {
-        if (this.model === undefined) {
+        if (this.Model === undefined) {
             return <div>test</div>
         }
 
@@ -157,23 +176,24 @@ export class EpubReader extends BaseComponent<ProcessedEbook> {
             content = <div></div>;
         } else {
 
-            const data = this.model.content[this.selection[0]][this.selection[1]].content;
-            content =<>{...data.map((n, i) => <pre data-selected={this.selection[2] === i} >{n}</pre>)}</>;
+            const data = this.Model.content[this.selection[0]][this.selection[1]].content;
+            content = <>{...data.map((n, i) => <pre data-selected={this.selection[2] === i} >{n}</pre>)}</>;
         }
-
-
+        let index = 0;
 
         return <>
             <nav class="tableOfContent">
                 <ul class="c1">
-                    {...this.model.content.map((n1, i1) => <li>{i1}<ul class="c2">
-
+                    {...this.Model.content.map((n1, i1) => <li>{i1}<ul class="c2">
                         {...n1.map((n2, i2) => <li>{n2.title}<ul class="c3">
+                            {...n2.content.map((n3, i3) => {
 
-                            {...n2.content.map((n3, i3) => <li data-selected={this.selection?.length > 0 && this.selection[0]=== i1 && this.selection[1] === i2 && this.selection[2] === i3}  class="part" onClick={a3 => this.click(i1, i2, i3)}>{i3 + 1}</li>)}
+                                return <li data-Nr={index} data-index={[i1, i2, i3]} data-selected={this.selection?.length > 0 && this.selection[0] === i1 && this.selection[1] === i2 && this.selection[2] === i3} class="part" onClick={a3 => this.click(i1, i2, i3)}>{i3 + 1}</li>;
+                                index++;
+                                this.MaxPos = index;
 
+                            })}
                         </ul></li>)}
-
                     </ul></li>)}
                 </ul>
             </nav>

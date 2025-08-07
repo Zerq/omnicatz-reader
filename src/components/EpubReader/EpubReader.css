@@ -75,11 +75,11 @@
 
         li {
 
-            color: silver;
+            color:var(--fore);
             margin-bottom: 0.5rem;
 
             li {
-                color: white;
+                color:var(--fore);
                 margin-bottom: 0.5rem;
             }
         }
